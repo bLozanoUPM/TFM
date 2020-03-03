@@ -1,0 +1,20 @@
+version: '3'
+services:
+  repo:
+    image: librairy/repo:latest
+    container_name: librairy-repo
+    ports: [8983:8983]
+    networks:
+      - net
+  api:
+    image: librairy/api:latest
+    container_name: librairy-api
+    ports: [8081:7777]
+    volumes:
+      - ./src/main/resources/acquis:/librairy/resources
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - NLP_ENDPOINT=http://librairy.linkeddata.es/nlp
+      - LIBRAIRY_API_USERS=TFM:2020
+
+
