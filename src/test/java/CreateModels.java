@@ -43,8 +43,8 @@ public class CreateModels {
     @Test
     public void createModel() throws IOException {
         String lang = "en";
-        String model = "ck6";
-        String split = "c1";
+        String model = "sml3";
+        String split = "s2";
 
         int version = 1;
         for(Integer n: new int[]{50,100,300,500}){

@@ -1,11 +1,5 @@
 version: '3'
 services:
-  repo:
-    image: librairy/repo:latest
-    container_name: librairy-repo
-    ports: [8983:8983]
-    networks:
-      - net
   api:
     image: librairy/api:latest
     container_name: librairy-api
