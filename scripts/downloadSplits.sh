@@ -6,4 +6,4 @@ wget --load-cookies cookies.txt -O  acquis.zip\
 
 
 unzip acquis.zip
-rm acquis.zip
+rm acquis.zip cookies.txt confirm.txt

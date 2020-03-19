@@ -15,7 +15,7 @@ public class CreateModels {
 
     @Test
     public void createModels() throws IOException {
-        for(String lang: new String[]{"en","es"})
+        for(String lang: new String[]{/*"en",*/"es"})
             Files.list(Paths.get(resources+"/"+lang+"/"))
                     .filter(Files::isDirectory)
                     .forEach(d->{
@@ -30,7 +30,7 @@ public class CreateModels {
                                     LibrairyClient.createModel(lang+"_"+model+"_"+model_name.substring(0, model_name.lastIndexOf('.')),
                                             lang.toUpperCase(),
                                             (version++) +".0",
-                                            "/librairy/resources/en/"+model+"/train/" + model_name,
+                                            "/librairy/resources/"+lang+"/"+model+"/train/" + model_name,
                                             n);
                                 }
                             });
@@ -38,6 +38,22 @@ public class CreateModels {
                             e.printStackTrace();
                         }
                     });
+    }
+
+    @Test
+    public void createModel() throws IOException {
+        String lang = "en";
+        String model = "ck6";
+        String split = "c1";
+
+        int version = 1;
+        for(Integer n: new int[]{50,100,300,500}){
+            LibrairyClient.createModel(lang+"_"+model+"_"+split,
+                    lang.toUpperCase(),
+                    (version++) +".0",
+                    "/librairy/resources/en/"+model+"/train/" + split+".csv",
+                    n);
+        }
 
     }
 }

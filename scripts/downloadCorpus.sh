@@ -5,4 +5,4 @@ wget --load-cookies cookies.txt -O  corpora.zip\
      'https://docs.google.com/uc?export=download&id=1g6LotttRN89FicpwlWdJCVjAV5JzTnXm&confirm='$(<confirm.txt)
 
 unzip corpora.zip
-rm corpora.zip
+rm corpora.zip cookies.txt confirm.txt

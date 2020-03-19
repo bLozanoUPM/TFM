@@ -30,7 +30,7 @@ public class LibrairyClient {
         Update this with your information
      */
 //    private static final String basic_auth = "blozano:oeg2019";
-    private static final String basic_auth = "demo:2019";
+    private static final String basic_auth = "TFM:2020";
     private static final String email = "borja.lozano.alvarez@alumnos.upm.es";
     private static final String docker_pwd = "S96jPp5TS4JzsKy";
     private static final String docker_user = "blozanoalvarez";
@@ -190,6 +190,7 @@ public class LibrairyClient {
             put("size", -1);
             put("url", doc_url);
         }});
+        LOG.info(body.toString());
         try {
             JSONObject response = new JSONObject(post(body,endpoint));
 
