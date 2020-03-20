@@ -41,7 +41,7 @@ public class CreateModels {
     }
 
     @Test
-    public void createModel() throws IOException {
+    public void createModel() {
         String lang = "en";
         String model = "sml3";
         String split = "s2";
