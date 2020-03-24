@@ -19,6 +19,7 @@ public class CreateModels {
             Files.list(Paths.get(resources+"/"+lang+"/"))
                     .filter(Files::isDirectory)
                     .forEach(d->{
+                       if(d.getFileName().toString().startsWith("s"))return;
                         try {
                             Files.list(Paths.get(d.toString()+"/train/"))
                             .forEach(t->{
@@ -43,8 +44,8 @@ public class CreateModels {
     @Test
     public void createModel() {
         String lang = "en";
-        String model = "sml3";
-        String split = "s2";
+        String model = "ck3";
+        String split = "c1";
 
         int version = 1;
         for(Integer n: new int[]{50,100,300,500}){

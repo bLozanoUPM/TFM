@@ -94,16 +94,6 @@ public class CSVReader {
         return corpora;
     }
 
-    /*
-        Load corpus size from file
-        Path of the file:
-            src/main/java/resources/size/total_size.csv
-     */
-    public static LinkedHashMap<String,Integer> loadSize(){
-        String path = "src/main/resources/size/total_size.csv";
-        return loadSize(path);
-    }
-
     public static LinkedHashMap<String,Integer> loadSize(String path){
 
         LinkedHashMap<String, Integer> corpus_size =  new LinkedHashMap<>();
@@ -151,6 +141,38 @@ public class CSVReader {
                 int tokens = Integer.parseInt(document[3]);
                 String text = document[4].replace("\"","");
                 corpus.put(id,new Doc(id,lables,text,tokens));
+            }
+            csvReader.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return corpus;
+    }
+
+    /*
+        Load list of documents from CSV
+            column names:   id;     lables_s;      size_i;      ntokens_i;      text_s
+            separator:      ;
+     */
+    public static Map<String,Doc> loadSplits(String path){
+        Map<String,Doc> corpus = new HashMap<>();
+        try {
+            File file = new File(path);
+            FileReader fileReader = new FileReader(file);
+
+            BufferedReader csvReader = new BufferedReader(fileReader);
+            String row = null;
+            csvReader.readLine();     // column names
+            while ( (row = csvReader.readLine()) != null )
+            {
+                String[] document = row.split(",\"",3);
+
+                String id = document[0];
+                List<String> labels = Arrays.asList(document[1].replaceAll("[\\[\\]]","").
+                        replaceAll("\"","").split(","));
+                String text = document[2].replace("\"","");
+                corpus.put(id,new Doc(id,labels,text,0));
             }
             csvReader.close();
 

@@ -36,7 +36,6 @@ public class HoldOutSplit {
 
         jrc_ids = new ArrayList<>(jrc.keySet());
 
-        dgt_ids = new ArrayList<>(dgt.keySet());
 
         resources_R+="acquis/"+lang+"/";
         resources+="acquis/"+lang+"/";

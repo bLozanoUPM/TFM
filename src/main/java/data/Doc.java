@@ -6,6 +6,7 @@ import metrics.JSD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -159,9 +160,17 @@ public class Doc {
     /*
         Infer the document projection using the Librairy
      */
-    public void addProjection(String model){
+    public void addProjection(String model ) {
         modelProjection.put(model,LibrairyClient.infer(this));
     }
+
+    /*
+        Infer the document projection using the Librairy
+     */
+    public void addProjection(String model, String endpoint ){
+        modelProjection.put(model,LibrairyClient.infer(this,endpoint));
+    }
+
 
     /*
         Add a new model projection from:
