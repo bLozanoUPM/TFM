@@ -6,6 +6,11 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Collection;
 import java.util.Map;
 
 public class GetEffectiveSize {
@@ -35,9 +40,30 @@ public class GetEffectiveSize {
                     if(i++%1000==0)LOG.info("{}:{}",i,i/size);
                 }
                 pool.awaitTermination();
-                
+
             }
         }
+    }
 
+    public void toFile(String filename, Collection<Doc> docs) throws IOException {
+        File f = new File(resources+"/coprus/"+filename);
+        FileWriter fw = new FileWriter(f);
+        BufferedWriter bw = new BufferedWriter(fw);
+
+        bw.flush();
+
+        bw.write("id;lables_s;size_i;ntokens_i;text_s\n");
+
+        for (Doc doc: docs){
+            String text = doc.getText();
+            bw.write(doc.getId() + ";" +
+                    doc.getLabels().toString() + ";" +
+                    text.length() + ";" +
+                    doc.getN_tokens() + ";" +
+                    "\"" + doc.getText().replace("\n","").replace("\"","") +"\"\n"
+            );
+        }
+        bw.close();
+        fw.close();
     }
 }
