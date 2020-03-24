@@ -20,7 +20,7 @@ public class GetEffectiveSize {
     private String resources = "./src/main/resources/";
 
     @Test
-    public void effectiveSize(){
+    public void effectiveSize() throws IOException {
         String[] corpora = {"jrc","dgt"};
         String[] languages = {"es","en"};
 
@@ -41,6 +41,7 @@ public class GetEffectiveSize {
                 }
                 pool.awaitTermination();
 
+                toFile(corpus.toUpperCase()+"_"+lang.toUpperCase()+".csv",docs.values());
             }
         }
     }
