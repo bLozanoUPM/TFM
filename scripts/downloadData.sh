@@ -3,4 +3,4 @@
 
 mkdir src/main/resources
 
-mv corpora/ acquis/ src/main/resources
+mv acquis.csv acquis/ src/main/resources

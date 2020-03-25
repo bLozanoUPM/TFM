@@ -87,9 +87,11 @@ public class LibrairyClient {
         body.put("multigrams",true);
         body.put("text",text);
 
-        JSONObject response = new JSONObject(post(body,endpoint));
+        String response = post(body,endpoint);
+        if(response==null) return Collections.emptyList();
+        JSONObject tokens = new JSONObject(response);
 
-        return new ArrayList<>(Arrays.asList(((String) response.get("tokens")).split(" ")));
+        return new ArrayList<>(Arrays.asList(((String) tokens.get("tokens")).split(" ")));
     }
 
     /*

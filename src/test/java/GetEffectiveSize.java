@@ -10,8 +10,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Map;
+import java.util.*;
 
 public class GetEffectiveSize {
 
@@ -21,50 +20,52 @@ public class GetEffectiveSize {
 
     @Test
     public void effectiveSize() throws IOException {
-        String[] corpora = {"jrc","dgt"};
-        String[] languages = {"es","en"};
 
-        Map<String,Doc> docs;
+        List<String> list =
+                Collections.synchronizedList(new ArrayList<String>());
+
+        Map<String,Doc> docs = CSVReader.loadCorpus(resources+"corpora/acquis.csv");
         ParallelExecutor pool = new ParallelExecutor();
-        for (String corpus: corpora) {
-            for (String lang: languages){
-                docs = CSVReader.loadCorpus(resources+"corpora/" +
-                        corpus.toUpperCase()+"_"+
-                        lang.toUpperCase()+".csv");
-                double size = docs.size();
-                LOG.info("{}_{}: {}",corpus,lang,size);
+        double size = docs.size();
+        LOG.info("acquis: {}",(int)size);
 
-                int i = 0;
-                for (Doc d: docs.values()) {
-                    pool.submit(()->d.setN_tokens(LibrairyClient.effectiveSize(d.getText(),lang.toUpperCase())));
-                    if(i++%1000==0)LOG.info("{}:{}",i,i/size);
-                }
-                pool.awaitTermination();
-
-                toFile(corpus.toUpperCase()+"_"+lang.toUpperCase()+".csv",docs.values());
-            }
+        int i = 0;
+        for (Doc d: docs.values()) {
+            String lang = d.getCorpus_id().split("_")[1];
+            pool.submit(()->{
+                int tokens = LibrairyClient.effectiveSize(d.getText().trim(),lang.toUpperCase());
+                if(tokens==0)
+                    list.add(d.getId());
+                else
+                    d.setN_tokens(tokens);
+            });
+            if(++i%1000==0)LOG.info("{}:{}%",i,(i/size)*100);
         }
+        pool.awaitTermination();
+        list.forEach(LOG::info);
+        list.forEach(docs::remove);
+        toFile("acquis_size.csv",docs.values());
     }
 
     public void toFile(String filename, Collection<Doc> docs) throws IOException {
-        File f = new File(resources+"/coprus/"+filename);
+        File f = new File(resources+"/corpus/"+filename);
         FileWriter fw = new FileWriter(f);
         BufferedWriter bw = new BufferedWriter(fw);
 
         bw.flush();
 
-        bw.write("id;lables_s;size_i;ntokens_i;text_s\n");
+        bw.write("id;size_i;ntokens_i\n");
 
         for (Doc doc: docs){
             String text = doc.getText();
             bw.write(doc.getId() + ";" +
-                    doc.getLabels().toString() + ";" +
                     text.length() + ";" +
                     doc.getN_tokens() + ";" +
-                    "\"" + doc.getText().replace("\n","").replace("\"","") +"\"\n"
+                    "\n"
             );
         }
         bw.close();
         fw.close();
     }
+    
 }

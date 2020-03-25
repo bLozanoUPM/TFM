@@ -120,7 +120,7 @@ public class CSVReader {
 
     /*
         Load list of documents from CSV
-            column names:   id;     lables_s;      size_i;      ntokens_i;      text_s
+            column names:   id;corpus_id;labels_t;text_s
             separator:      ;
      */
     public static Map<String,Doc> loadCorpus(String path){
@@ -134,13 +134,15 @@ public class CSVReader {
             csvReader.readLine();     // column names
             while ( (row = csvReader.readLine()) != null )
             {
-                String[] document = row.split(";",5);
+                String[] document = row.split(";",4);
 
+                String text = document[3].replace("\"","");
+                if(text.isEmpty())continue;
                 String id = document[0];
-                List<String> lables = Arrays.asList(document[1].replaceAll("[\\[\\]]","").split(","));
-                int tokens = Integer.parseInt(document[3]);
-                String text = document[4].replace("\"","");
-                corpus.put(id,new Doc(id,lables,text,tokens));
+                String corpus_id = document[1];
+                List<String> lables = Arrays.asList(document[2].replaceAll("[\\[\\]]","").split(","));
+
+                corpus.put(id,new Doc(id,corpus_id,lables,text));
             }
             csvReader.close();
 

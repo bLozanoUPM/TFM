@@ -27,6 +27,19 @@ public class ParallelExecutor {
                 new ThreadPoolExecutor.CallerRunsPolicy());
     }
 
+    public ParallelExecutor(int threads){
+        int cpus = Runtime.getRuntime().availableProcessors();
+        int maxThreads = Math.max(Math.min(cpus, threads)-1,1);
+        LOG.debug("Creating pool with {} threads",maxThreads);
+        pool = new ThreadPoolExecutor(
+                maxThreads, // core thread pool size
+                maxThreads, // maximum thread pool size
+                1, // time to wait before resizing pool
+                TimeUnit.MINUTES,
+                new ArrayBlockingQueue<Runnable>(maxThreads, true),
+                new ThreadPoolExecutor.CallerRunsPolicy());
+    }
+
 
     public void execute(Runnable task){
         pool.execute(task);

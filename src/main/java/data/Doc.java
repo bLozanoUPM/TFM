@@ -55,6 +55,17 @@ public class Doc {
         relevant = new ArrayList<>();
     }
 
+    /*
+       Constructor
+       Create a document without source
+    */
+    public Doc(String id, String corpus_id, List<String> labels, String text){
+        this.id = id;
+        this.corpus_id=corpus_id;
+        this.labels = labels;
+        this.text = text;
+    }
+
 
     /*
         Constructor
