@@ -2,14 +2,12 @@ import data.Doc;
 import io.CSVReader;
 import io.LibrairyClient;
 import io.ParallelExecutor;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class GetEffectiveSize {
@@ -18,13 +16,35 @@ public class GetEffectiveSize {
 
     private String resources = "./src/main/resources/";
 
+    Map<String,Doc> docs;
+
+    @Before
+    public void before() throws IOException{
+        docs = CSVReader.loadCorpus(resources+"corpora/acquis.csv");
+        File f = new File(resources+"/missing.txt");
+        if(f.exists()){
+            List<String> miss = new ArrayList<>();
+            FileReader fileReader = new FileReader(f);
+
+            BufferedReader reader = new BufferedReader(fileReader);
+            String row = null;
+            while ( (row = reader.readLine()) != null )
+            {
+                miss.add(row);
+            }
+            reader.close();
+
+            docs.keySet().retainAll(miss);
+        }
+
+    }
+
     @Test
     public void effectiveSize() throws IOException {
 
-        List<String> list =
+        List<String> miss =
                 Collections.synchronizedList(new ArrayList<String>());
 
-        Map<String,Doc> docs = CSVReader.loadCorpus(resources+"corpora/acquis.csv");
         ParallelExecutor pool = new ParallelExecutor();
         double size = docs.size();
         LOG.info("acquis: {}",(int)size);
@@ -35,30 +55,31 @@ public class GetEffectiveSize {
             pool.submit(()->{
                 int tokens = LibrairyClient.effectiveSize(d.getText().trim(),lang.toUpperCase());
                 if(tokens==0)
-                    list.add(d.getId());
+                    miss.add(d.getId());
                 else
                     d.setN_tokens(tokens);
             });
             if(++i%1000==0)LOG.info("{}:{}%",i,(i/size)*100);
         }
         pool.awaitTermination();
-        list.forEach(LOG::info);
-        list.forEach(docs::remove);
+        LOG.info("{}",miss.size());
+        miss.forEach(docs::remove);
         toFile("acquis_size.csv",docs.values());
+        missing(miss);
     }
 
     public void toFile(String filename, Collection<Doc> docs) throws IOException {
-        File f = new File(resources+"/corpus/"+filename);
-        FileWriter fw = new FileWriter(f);
+        File f = new File(resources+"/corpora/"+filename);
+        FileWriter fw = new FileWriter(f,true);
         BufferedWriter bw = new BufferedWriter(fw);
 
-        bw.flush();
-
-        bw.write("id;size_i;ntokens_i\n");
+        if(f.length()==0)
+            bw.write("id;corpus_id;size_i;ntokens_i\n");
 
         for (Doc doc: docs){
             String text = doc.getText();
             bw.write(doc.getId() + ";" +
+                    doc.getCorpus_id() + ";" +
                     text.length() + ";" +
                     doc.getN_tokens() + ";" +
                     "\n"
@@ -67,5 +88,21 @@ public class GetEffectiveSize {
         bw.close();
         fw.close();
     }
-    
+
+    /*
+        Due to LibrAIry api having some problem ingesting all documents errors have to be safe and process in another batch
+     */
+    public void missing(List<String> missing) throws IOException {
+        File f = new File(resources+"/missing.txt");
+        FileWriter fw = new FileWriter(f);
+        BufferedWriter bw = new BufferedWriter(fw);
+
+        bw.flush();
+        for (String miss: missing ) {
+        bw.write(miss);bw.newLine();
+        }
+        bw.close();
+        fw.close();
+    }
+
 }
