@@ -18,110 +18,114 @@ public class HoldOutSplit {
     private final static Logger LOG = LoggerFactory.getLogger(HoldOutSplit.class);
 
     private final double split = 0.05;
-    private final String lang = "es";
-    private String resources_R = "/Users/borjalozanoalvarez/Projects/TFM/data/";
-    private String resources = "/Users/borjalozanoalvarez/Projects/Library/TFM/src/main/resources/";
+    private final String lang = "en";
+    private String resources = "./src/main/resources/";
 
 
-//    @Test
-//    public void acquis() throws IOException {
-//
-//        Random generator = new Random(1);
-//
-//        Map<String,Doc> jrc, dgt;
-//        jrc = CSVReader.loadCorpus(resources+"corpora/JRC_"+lang.toUpperCase()+".csv");
-//        dgt = CSVReader.loadCorpus(resources+"corpora/DGT_"+lang.toUpperCase()+".csv");
-//
-//        List<String> jrc_ids,dgt_ids;
-//
-//        jrc_ids = new ArrayList<>(jrc.keySet());
-//
-//
-//        resources_R+="acquis/"+lang+"/";
-//        resources+="acquis/"+lang+"/";
-//
-//        Files.list(Paths.get(resources_R))
-//                .filter(Files::isDirectory)
-//                .forEach(d->{   // For each split set
-//                    try {
-//                        String spl = d.getFileName().toString();
-//                        LOG.info("\n\n\n" +
-//                                "########################### " +
-//                                spl +
-//                                " ###########################");
-//
-//                        Files.list(d.toAbsolutePath())
-//                                .forEach(f->{   // For each individual split
-//                                    String file_name = spl+"/"+f.getFileName().toString();
-//
-//                                    if(f.getFileName().toString().equals("summary.csv")
-//                                            || !file_name.endsWith(".csv"))
-//                                        return;
-//
-//                                    String file_path = resources_R+file_name;
-//                                    List<String> ids = new ArrayList<>(
-//                                            CSVReader.loadSize(file_path)
-//                                                    .keySet()
-//                                    );
-//                                    int test_size = (int) Math.floor(ids.size() * split);
-//
-//                                    List<String> test = new ArrayList<>(jrc_ids);
-//                                    test.retainAll(ids);
-//
-//                                    LOG.info("{} -> {}::{}>{}",file_name,ids.size(),test_size,test.size()>=test_size ? test.size()>=test_size : test.size());
-//
-//                                    if(test_size<=test.size()){
-//                                        Collections.shuffle(test,generator);
-//                                        test.subList(0,test_size);
-//                                    }
-//
-//                                    ids.removeAll(test);
-//
-//                                    // Train/Test Files
-//                                    try {
-//
-//                                        File testFile = new File(resources+spl+"/test/"+f.getFileName().toString());
-//                                        File trainFile = new File(resources+spl+"/train/"+f.getFileName().toString());
-//
-//                                        FileWriter testFW = new FileWriter(testFile);
-//                                        FileWriter trainFW = new FileWriter(trainFile);
-//
-//                                        BufferedWriter testBW = new BufferedWriter(testFW);
-//                                        BufferedWriter trainBW = new BufferedWriter(trainFW);
-//
-//                                        testBW.write("id,root-labels_t,text_t\n");
-//                                        trainBW.write("id,text_t\n");
-//
-//                                        test.forEach(q->{
-//                                            try {
-//                                                testBW.write(q+",\""+jrc.get(q).getLabels()+"\",\""+jrc.get(q).getText()+"\"\n");
-//                                            } catch (IOException e) {
-//                                                e.printStackTrace();
-//                                            }
-//                                        });
-//
-//                                        ids.forEach(q->{
-//                                            try {
-//                                                trainBW.write(q+",\""+dgt.get(q).getText()+"\"\n");
-//                                            } catch (IOException e) {
-//                                                e.printStackTrace();
-//                                            }
-//                                        });
-//
-//
-//                                        testBW.close();
-//                                        trainBW.close();
-//                                    } catch (IOException e) {
-//                                        e.printStackTrace();
-//                                    }
-//
-//                                });
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                });
-//
-//    }
+    @Test
+    public void acquis() throws IOException {
+
+        Random generator = new Random(1);
+
+        Map<String,Doc> docs;
+        docs = CSVReader.loadCorpus(resources+"corpora/acquis.csv")
+                .entrySet()
+                .stream()
+                .filter(d->d.getValue().getCorpus_id().endsWith(lang))
+                .collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue));
+
+        List<String> jrc_ids = docs
+                .entrySet()
+                .stream()
+                .filter(d->d.getValue().getCorpus_id().startsWith("jrc"))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+
+        resources+="acquis/"+lang+"/";
+
+        Files.list(Paths.get(resources))
+                .filter(Files::isDirectory)
+                .forEach(d->{   // For each split set
+                    try {
+                        String spl = d.getFileName().toString();
+                        LOG.info("\n\n\n" +
+                                "########################### " +
+                                spl +
+                                " ###########################");
+
+                        Files.list(Paths.get(d.toAbsolutePath() + "/R"))
+                                .forEach(f->{   // For each individual split
+                                    String filename = f.getFileName().toString();
+
+                                    if(filename.equals("summary.csv")
+                                            || !filename.endsWith(".csv"))
+                                        return;
+
+                                    LOG.info(spl+"/"+filename);
+
+                                    List<String> train = new ArrayList<>(
+                                            CSVReader.loadSize(f.toAbsolutePath().toString())
+                                                    .keySet()
+                                    );
+                                    int test_size = (int) Math.floor(train.size() * split);
+
+                                    List<String> test = new ArrayList<>(jrc_ids);
+                                    test.retainAll(train);
+
+                                    LOG.info("{} -> {}::{}>{}",spl+"/"+filename,train.size(),test_size,test.size()>=test_size ? test.size()>=test_size : test.size());
+
+                                    if(test_size<=test.size()){
+                                        Collections.shuffle(test,generator);
+                                        test.subList(0,test_size);
+                                    }
+
+                                    train.removeAll(test);
+
+                                    // Train/Test Files
+                                    try {
+
+                                        File testFile = new File(resources+spl+"/test/"+lang+"_"+filename);
+                                        File trainFile = new File(resources+spl+"/train/"+lang+"_"+filename);
+
+                                        FileWriter testFW = new FileWriter(testFile);
+                                        FileWriter trainFW = new FileWriter(trainFile);
+
+                                        BufferedWriter testBW = new BufferedWriter(testFW);
+                                        BufferedWriter trainBW = new BufferedWriter(trainFW);
+
+                                        testBW.write("id,root-labels_t,text_t\n");
+                                        trainBW.write("id,text_t\n");
+
+                                        test.forEach(q->{
+                                            try {
+                                                testBW.write(q+",\""+docs.get(q).getLabels()+"\",\""+docs.get(q).getText()+"\"\n");
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                        });
+
+                                        train.forEach(q->{
+                                            try {
+                                                trainBW.write(q+",\""+docs.get(q).getText()+"\"\n");
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                        });
+
+
+                                        testBW.close();
+                                        trainBW.close();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+
+    }
 
 
 }

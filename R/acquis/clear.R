@@ -1,10 +1,22 @@
 clear <- function(lang){
-  path<-concat("/Users/borjalozanoalvarez/Projects/Library/MetricPerformance/src/main/resources/size/acquis_",lang,"_size.csv")
-  print(path)
-  df=read.csv(path)
+  df=read.csv("../src/main/resources/corpora/acquis_size.csv", sep = ";")
+  
+  if(lang=="en"){
+    df=subset(df, corpus_id=="jrc_en" | corpus_id=="dgt_en")
+    jrc=subset(df, corpus_id=="jrc_en")
+  }
+  else if (lang=="es"){
+    df=subset(df, corpus_id=="jrc_es" | corpus_id=="dgt_es")
+    jrc=subset(df, corpus_id=="jrc_es")
+  }
+  else {
+    print("language not recognized")
+    exit()
+  }
+  
   
   # Define a min size and ntokens (dgt corpus is not clean so the lower bound will be defined by jrc)
-  jrc_minToken = range(subset(df, corpus_id=="jrc")$tokens_i, na.rm = TRUE)[1]
+  jrc_minToken = min(jrc$tokens_i, na.rm = TRUE)
   
   df <- df[df$tokens_i>=jrc_minToken,]
   

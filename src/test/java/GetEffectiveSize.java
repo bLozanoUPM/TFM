@@ -74,7 +74,7 @@ public class GetEffectiveSize {
         BufferedWriter bw = new BufferedWriter(fw);
 
         if(f.length()==0)
-            bw.write("id;corpus_id;size_i;ntokens_i\n");
+            bw.write("id;corpus_id;size_i;tokens_i\n");
 
         for (Doc doc: docs){
             String text = doc.getText();

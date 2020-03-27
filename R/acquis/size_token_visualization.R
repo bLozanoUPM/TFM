@@ -1,12 +1,12 @@
 library(ggplot2)
 
-source("R/acquis/clear.R")
-lang = "es"
-path = concat("data/acquis/",lang,"/")
+source("acquis/clear.R")
+lang = "en"
+path = concat("../src/main/resources/R/",lang,"_")
 df<-clear(lang)
 
 ggplot(df,aes(y=tokens_i,x=size_i))+
-  geom_point(alpha=0.7, size=0.4, aes(color=df$corpus_id))+
+  geom_point(alpha=0.7, size=0.4, aes(color=corpus_id))+
   geom_smooth(method='lm', color="black") +
   labs(title= "Relation between size in number of characters and number of tokens for each document in the corpus",
        colour = "corpus_id",
@@ -72,7 +72,7 @@ ggplot(df,aes(x="",y=tokens_i))+
   geom_boxplot(fill="#FFFFEA")+
   labs(title="Distribution of tokens by corpus")+
   xlab("corpus")
-
+ggsave(concat(path,"box_tokens.png"))
 
 
 
