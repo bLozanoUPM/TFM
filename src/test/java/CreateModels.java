@@ -23,12 +23,11 @@ public class CreateModels {
                         try {
                             Files.list(Paths.get(d.toString()+"/train/"))
                             .forEach(t->{
-                                LOG.info(t.toString());
                                 String model = d.getFileName().toString();
                                 int version = 1;
                                 for(Integer n: new int[]{50,100,300,500}){
                                     String model_name = t.getFileName().toString();
-                                    LibrairyClient.createModel(lang+"_"+model+"_"+model_name.substring(0, model_name.lastIndexOf('.')),
+                                    LibrairyClient.createModel(model_name.substring(0, model_name.lastIndexOf('.')),
                                             lang.toUpperCase(),
                                             (version++) +".0",
                                             "/librairy/resources/"+lang+"/"+model+"/train/" + model_name,
