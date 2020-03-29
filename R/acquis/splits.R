@@ -62,25 +62,6 @@ sml <- function(lang,k){
     }
   }
   write.csv2(df_summary,file = concat(path,"summary.csv"),row.names=FALSE)
-  
-  
-  
-  # # Violin of tokens
-  # ggplot(data=df, aes(x=as.factor(cluster), y=tokens_i, fill=corpus_id)) +
-  #   geom_violin()+
-  #   scale_x_discrete(name="group_c")
-  # 
-  # # Boxplot+Jitter of tokens
-  # ggplot(data=df, aes(x=as.factor(cluster), y=tokens_i, fill=corpus_id)) +
-  #   geom_jitter(size=0.1)+
-  #   geom_boxplot(alpha=0.8)+
-  #   scale_x_discrete(name="group_c")
-  # 
-  # # Boxplot+Jitter of size
-  # ggplot(data=df, aes(x=as.factor(cluster), y=size_i, fill=corpus_id)) +
-  #   geom_jitter(size=0.1)+
-  #   geom_boxplot(alpha=0.8)+
-  #   scale_x_discrete(name="group_c")
 }
 
 ck <- function(lang,k){

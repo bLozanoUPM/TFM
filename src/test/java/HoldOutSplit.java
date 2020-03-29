@@ -18,14 +18,12 @@ public class HoldOutSplit {
     private final static Logger LOG = LoggerFactory.getLogger(HoldOutSplit.class);
 
     private final double split = 0.05;
-    private final String lang = "en";
+    private final String lang = "es";
     private String resources = "./src/main/resources/";
 
 
     @Test
     public void acquis() throws IOException {
-
-        Random generator = new Random(1);
 
         Map<String,Doc> docs;
         docs = CSVReader.loadCorpus(resources+"corpora/acquis.csv")
@@ -72,14 +70,18 @@ public class HoldOutSplit {
                                     List<String> test = new ArrayList<>(jrc_ids);
                                     test.retainAll(train);
 
-                                    LOG.info("{} -> {}::{}>{}",spl+"/"+filename,train.size(),test_size,test.size()>=test_size ? test.size()>=test_size : test.size());
-
                                     if(test_size<=test.size()){
-                                        Collections.shuffle(test,generator);
-                                        test.subList(0,test_size);
+                                        Collections.shuffle(test);
+                                        test = test.subList(0,test_size+1);
                                     }
 
                                     train.removeAll(test);
+                                    Collections.shuffle(train);
+
+                                    LOG.info("{} -> {}::{}>{}",spl+"/"+filename,
+                                            train.size(),
+                                            test_size,
+                                            test.size()>=test_size ? test.size()>=test_size : test.size());
 
                                     // Train/Test Files
                                     try {
@@ -98,7 +100,9 @@ public class HoldOutSplit {
 
                                         test.forEach(q->{
                                             try {
-                                                testBW.write(q+",\""+docs.get(q).getLabels()+"\",\""+docs.get(q).getText()+"\"\n");
+                                                testBW.write(q+",\""+docs.get(q).getLabels()+"\",\""
+                                                        +docs.get(q).getText().replaceAll(",","")+
+                                                        "\"\n");
                                             } catch (IOException e) {
                                                 e.printStackTrace();
                                             }
@@ -128,4 +132,10 @@ public class HoldOutSplit {
     }
 
 
+    public static void main(String[] args) {
+        List<String> list = new ArrayList<String>(Arrays.asList(new String[]{"a", "b", "c"}));
+        System.out.println(list.size());
+        list=list.subList(0,1);
+        System.out.println(list.size());
+    }
 }

@@ -15,7 +15,7 @@ public class CreateModels {
 
     @Test
     public void createModels() throws IOException {
-        for(String lang: new String[]{/*"en",*/"es"})
+        for(String lang: new String[]{"en"/*,"es"*/})
             Files.list(Paths.get(resources+"/"+lang+"/"))
                     .filter(Files::isDirectory)
                     .forEach(d->{
@@ -44,15 +44,16 @@ public class CreateModels {
     @Test
     public void createModel() {
         String lang = "en";
-        String model = "ck3";
-        String split = "c1";
+        String model = "sml3";
+        String split = "1";
 
         int version = 1;
         for(Integer n: new int[]{50,100,300,500}){
+            String name = lang+"_"+model+"_"+split;
             LibrairyClient.createModel(lang+"_"+model+"_"+split,
                     lang.toUpperCase(),
                     (version++) +".0",
-                    "/librairy/resources/en/"+model+"/train/" + split+".csv",
+                    "/librairy/resources/en/"+model+"/train/" + name + ".csv",
                     n);
         }
 

@@ -14,6 +14,7 @@ clear <- function(lang){
     exit()
   }
   
+  df$corpus_id<-factor(df$corpus_id)
   
   # Define a min size and ntokens (dgt corpus is not clean so the lower bound will be defined by jrc)
   jrc_minToken = min(jrc$tokens_i, na.rm = TRUE)
