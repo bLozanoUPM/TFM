@@ -15,25 +15,26 @@ public class CreateModels {
 
     @Test
     public void createModels() throws IOException {
-        for(String lang: new String[]{"en"/*,"es"*/})
+        for(String lang: new String[]{/*"en",*/"es"})
             Files.list(Paths.get(resources+"/"+lang+"/"))
                     .filter(Files::isDirectory)
+                    .filter(d->!d.getFileName().toString().contains("3")) //TODO
                     .forEach(d->{
-                       if(d.getFileName().toString().startsWith("s"))return;
+                        String model = d.getFileName().toString();
+                        LOG.info(model);
                         try {
                             Files.list(Paths.get(d.toString()+"/train/"))
-                            .forEach(t->{
-                                String model = d.getFileName().toString();
-                                int version = 1;
-                                for(Integer n: new int[]{50,100,300,500}){
-                                    String model_name = t.getFileName().toString();
-                                    LibrairyClient.createModel(model_name.substring(0, model_name.lastIndexOf('.')),
-                                            lang.toUpperCase(),
-                                            (version++) +".0",
-                                            "/librairy/resources/"+lang+"/"+model+"/train/" + model_name,
-                                            n);
-                                }
-                            });
+                                    .forEach(t->{
+                                        int version = 1;
+                                        for(Integer n: new int[]{50,100,300,500}){
+                                            String model_name = t.getFileName().toString();
+                                            LibrairyClient.createModel(model_name.substring(0, model_name.lastIndexOf('.')),
+                                                    lang.toUpperCase(),
+                                                    (version++) +".0",
+                                                    "/librairy/resources/"+lang+"/"+model+"/train/" + model_name,
+                                                    n);
+                                        }
+                                    });
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -42,17 +43,17 @@ public class CreateModels {
 
     @Test
     public void createModel() {
-        String lang = "en";
-        String model = "sml3";
+        String lang = "es";
+        String model = "sml9";
         String split = "1";
 
         int version = 1;
-        for(Integer n: new int[]{50,100,300,500}){
+        for(Integer n: new int[]{50/*,100,300,500*/}){
             String name = lang+"_"+model+"_"+split;
             LibrairyClient.createModel(lang+"_"+model+"_"+split,
                     lang.toUpperCase(),
                     (version++) +".0",
-                    "/librairy/resources/en/"+model+"/train/" + name + ".csv",
+                    "/librairy/resources/"+lang+"/"+model+"/train/" + name + ".csv",
                     n);
         }
 

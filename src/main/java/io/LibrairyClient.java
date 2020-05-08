@@ -164,8 +164,8 @@ public class LibrairyClient {
 
     }
 
-    static public double modelLog(int port) {
-        return (double) modelStats(port).get("loglikelihood");
+    static public String modelLog(int port) {
+        return (String) modelStats(port).get("loglikelihood");
 
     }
     /************************  Other Methods ************************/
@@ -189,6 +189,7 @@ public class LibrairyClient {
             }
 
             DataOutputStream wr = new DataOutputStream(httpConnection.getOutputStream());
+//            LOG.info("{}",body);
             wr.write(body.toString().getBytes());
             int responseCode = httpConnection.getResponseCode();
 
@@ -199,7 +200,7 @@ public class LibrairyClient {
                 bufferedReader = new BufferedReader(new InputStreamReader(httpConnection.getInputStream()));
             } else {
                 LOG.error("ERROR {} in Librairy connection. Trace:",responseCode);
-                LOG.info("{}",body);
+                LOG.error("{}",body);
                 bufferedReader = new BufferedReader(new InputStreamReader(httpConnection.getErrorStream()));
                 String line;
                 while ((line = bufferedReader.readLine()) != null) {

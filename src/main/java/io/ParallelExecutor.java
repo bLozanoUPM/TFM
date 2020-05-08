@@ -67,30 +67,4 @@ public class ParallelExecutor {
         }
         return true;
     }
-
-//    public void waitFor() {
-//        try {
-//            pool.wait();
-//        } catch (InterruptedException e) {
-//            LOG.debug("Interruption", e);
-//        }
-//    }
-//
-//    public void waitFor(long timeout) {
-//        try {
-//            pool.wait(timeout);
-//        } catch (InterruptedException e) {
-//            LOG.debug("Interruption", e);
-//        }
-//    }
-//
-//    public void waitFor(long timeout, int nanos) {
-//        try {
-//            pool.wait(timeout,nanos);
-//        } catch (InterruptedException e) {
-//            LOG.debug("Interruption", e);
-//        }
-//    }
-
-
 }

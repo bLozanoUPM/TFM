@@ -5,9 +5,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class Evaluation {
+public class RetrievalEvaluation {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Evaluation.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RetrievalEvaluation.class);
 
     private String description;
 
@@ -30,17 +30,21 @@ public class Evaluation {
 
     /************************  Constructors ************************/
 
-    public Evaluation(){
+    public RetrievalEvaluation(){
         this("Evaluation");
     }
 
-    public Evaluation(String description){
+    public RetrievalEvaluation(String description){
         this.description=description;
         ap = new Precision();
     }
 
 
     /************************  Getters/Setters ************************/
+
+    public String getDescription() {
+        return description;
+    }
 
     public long getN() {
         return N;
@@ -103,8 +107,6 @@ public class Evaluation {
     /************************  Other Methods ************************/
 
     public void addResult(List<String> relevant, List<String> retrieved){
-        // TODO ask why this?
-        //  https://github.com/cbadenes/Large-scale-Topic-based-Search/blob/master/src/main/java/oeg/lstbs/data/Evaluation.java
         if (relevant.isEmpty()){
             recall = 1.0;
             if (retrieved.isEmpty()){
@@ -163,4 +165,6 @@ public class Evaluation {
                 getPK(15) +"," +
                 getMAP();
     }
+
+
 }

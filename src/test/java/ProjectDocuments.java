@@ -19,27 +19,29 @@ public class ProjectDocuments {
     private static  String resources = "./src/main/resources/acquis/";
 
     // Change this with the eval name
-    private static final String model = "c";
+    private static final String model = "ck";
 
     // Change this with the training subsets
-    private static final int split = 3;
+    private static final int split = 9;
 
     // Change this with the number of topics
     private static final int ntopics = 50;
 
     // Change this with the language
-    private static final String lang = "en";
+    private static final String lang = "es";
 
     @Before
     public void before() {
         resources = resources+
                 lang+"/"+
                 model+
-                ((model=="c") ? "k": "ml" )+
                 split;
         LOG.info(resources);
-    }
 
+        for (int i = 0; i < split ; i++) {
+            LOG.info("{}{}_{} log:{}",model,split,i+1,LibrairyClient.modelLog(8081+i));
+        }
+    }
 
     @Test
     public void projectDocuments() throws IOException {
@@ -55,9 +57,9 @@ public class ProjectDocuments {
         for (int i = 1; i <= split ; i++) {
             Map<String,Doc> test = CSVReader.loadSplits(resources
                     +"/test/"+
-                    model+i+".csv");
+                    lang+"_"+model+split+"_"+i+".csv");
             for (Doc d : test.values()) {
-                d.setCorpus_id(model + i);
+                d.setCorpus_id(""+i);
             }
             corpus.putAll(test);
         }
@@ -73,7 +75,7 @@ public class ProjectDocuments {
                 int finalI = i;
                 pool.submit(() -> {
                     d.addProjection(model + (finalI + 1),
-                            "http://localhost:808" + finalI + "/inferences"
+                            "http://localhost:808" + (finalI + 1) + "/inferences"
                     );
                 });
             }
@@ -114,22 +116,22 @@ public class ProjectDocuments {
         BufferedWriter bw = new BufferedWriter(file);
 
         //  csv columns
-        bw.write("ptm_id;test_id;labels_t;topics_t;vector_d\n");
+        bw.write("id;ptm_id;test_id;labels_t;topics_t;vector_d\n");
 
         docs.forEach(d->{
-            d.getModels().forEach(m->{
+            d.getModels().forEach(ptm->{
                 try{
                     bw.write(d.getId());bw.write(";");
+                    bw.write(ptm);bw.write(";");
                     bw.write(d.getCorpus_id());bw.write(";");
                     bw.write(d.getLabels().toString().replace(" ",""));bw.write(";");
-                    bw.write(d.getModelProjection(m).getTopics().toString().replace(" ",""));bw.write(";");
-                    bw.write(d.getModelProjection(m).getVector().toString().replace(" ",""));bw.write("\n");
+                    bw.write(d.getModelProjection(ptm).getTopics().toString().replace(" ",""));bw.write(";");
+                    bw.write(d.getModelProjection(ptm).getVector().toString().replace(" ",""));bw.write("\n");
                 } catch (IOException e){
                     e.printStackTrace();
                 }
             });
         });
         bw.close();
-
     }
 }

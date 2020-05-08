@@ -8,21 +8,24 @@ df<-clear(lang)
 ggplot(df,aes(y=tokens_i,x=size_i))+
   geom_point(alpha=0.7, size=0.4, aes(color=corpus_id))+
   geom_smooth(method='lm', color="black") +
-  labs(title= "Relation between size in number of characters and number of tokens for each document in the corpus",
-       colour = "corpus_id",
-       subtitle= concat("acquis_",lang))
+  # labs(
+  #   # title= "Relation between size in number of characters and number of tokens for each document in the corpus",
+  #      colour = "corpus_id",
+  #      subtitle= concat("acquis_",lang))
 ggsave(concat(path,"scatter_size-tokens.png"))
 
 ggplot(df, aes(x=size_i, fill=corpus_id)) + 
   geom_density(alpha=0.7)+
-  labs(title="Density of the size in each corpus",
-       subtitle= concat("acquis_",lang))
+  # labs(
+  #   # title="Density of the size in each corpus",
+  #      subtitle= concat("acquis_",lang))
 ggsave(concat(path,"dens_size.png"))
 
 ggplot(df, aes(x=tokens_i, fill=corpus_id)) + 
   geom_density(alpha=0.7)+
-  labs(title="Density of the tokens in each corpus",
-       subtitle= concat("acquis_",lang))
+  # labs(
+  #   # title="Density of the tokens in each corpus",
+  #      subtitle= concat("acquis_",lang))
 ggsave(concat(path,"dens_tokens.png"))
 
 # ggplot(df, aes(x=tokens_i,fill=corpus_id)) + 
@@ -33,8 +36,8 @@ ggsave(concat(path,"dens_tokens.png"))
 
 ggplot(df, aes(x=tokens_i,fill=corpus_id)) + 
   geom_histogram(binwidth = 100, color = "black",  boundary = TRUE, alpha=0.7) +
-  labs(title="Number of documents in each range (bin=100)",
-       subtitle= concat("acquis_",lang))
+  # labs(title="Number of documents in each range (bin=100)",
+  #      subtitle= concat("acquis_",lang))
 ggsave(concat(path,"hist_100.png"))
 
 # ggplot(df, aes(x=tokens_i,fill=corpus_id)) + 
@@ -53,8 +56,8 @@ ggsave(concat(path,"hist_100.png"))
 ggplot(df,aes(x=corpus_id, y=size_i, fill=corpus_id))+
   geom_violin(alpha=0.4, fill ="black")+
   geom_boxplot()+
-  labs(title="Distribution of size by corpus",
-       subtitle= concat("acquis_",lang))
+  # labs(title="Distribution of size by corpus",
+  #      subtitle= concat("acquis_",lang))
 ggsave(concat(path,"box_size-corpus.png"))
 
 
@@ -62,15 +65,15 @@ ggsave(concat(path,"box_size-corpus.png"))
 ggplot(df,aes(x=corpus_id, y=tokens_i, fill=corpus_id))+
   geom_violin(alpha=0.4, fill ="black")+
   geom_boxplot()+
-  labs(title="Distribution of size by corpus",
-       subtitle= concat("acquis_",lang))
+  # labs(title="Distribution of size by corpus",
+  #      subtitle= concat("acquis_",lang))
 ggsave(concat(path,"box_tokens-corpus.png"))
 
 
 ggplot(df,aes(x="",y=tokens_i))+
   geom_violin(alpha=0.4, fill ="black")+
   geom_boxplot(fill="#FFFFEA")+
-  labs(title="Distribution of tokens by corpus")+
+  # labs(title="Distribution of tokens by corpus")+
   xlab("corpus")
 ggsave(concat(path,"box_tokens.png"))
 

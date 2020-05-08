@@ -4,14 +4,16 @@ import data.DocProjection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DTL implements DocumentMetric {
 
     private static final Logger LOG = LoggerFactory.getLogger(DTL.class);
-
     private List<Double> weights = new ArrayList<>();
     private int max;
     private Double threshold;
@@ -42,6 +44,7 @@ public class DTL implements DocumentMetric {
 
     // For now, Similarity is measured just by checking if topic levels are disjoint
     public Double similarity(DocProjection d1, DocProjection d2){
+        
         List<List<String>> t1 = d1.getTopics();
         List<List<String>> t2 = d2.getTopics();
         double d = 0;
@@ -50,6 +53,8 @@ public class DTL implements DocumentMetric {
                 d += Collections.disjoint(t1.get(i),t2.get(j)) ? 0 : weights.get(i)*weights.get(j);
             }
         }
+
+        
         return d/max;
     }
 

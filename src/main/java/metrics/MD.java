@@ -2,7 +2,10 @@ package metrics;
 
 import data.DocProjection;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
 public class MD implements DocumentMetric {
@@ -38,7 +41,6 @@ public class MD implements DocumentMetric {
 
     @Override
     public Double similarity(DocProjection d1, DocProjection d2) {
-
         return 1-distance(d1,d2);
     }
 
@@ -46,4 +48,5 @@ public class MD implements DocumentMetric {
     public Double getThreshold() {
         return threshold;
     }
+
 }

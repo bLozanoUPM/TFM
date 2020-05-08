@@ -2,9 +2,13 @@ package metrics;
 
 import data.DocProjection;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class HE implements VectorMetrics {
+
 
     Double threshold;
 
@@ -60,4 +64,6 @@ public class HE implements VectorMetrics {
     public Double getThreshold() {
         return threshold;
     }
+
+
 }

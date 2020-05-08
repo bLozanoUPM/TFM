@@ -132,7 +132,7 @@ public class Doc {
         Get documents retrieved by the ptm $model the JSD (>0.5) metric sorted by value
      */
     public List<String> getRetrieved(String model, List<Doc> corpus){
-         return getRetrieved(model,corpus,new JSD());
+        return getRetrieved(model,corpus,new JSD());
     }
 
     /*
@@ -146,8 +146,9 @@ public class Doc {
 
         DocProjection doc = modelProjection.get(model);
         corpus.forEach(d ->{
+            if(d.getId().equals(this.id)) return;
             Double similarity = metric.similarity(doc,d.modelProjection.get(model));
-            if(!(d.getId().equals(this.id)) && (similarity>metric.getThreshold()))
+            if(similarity>metric.getThreshold())
                 retrievedMap.put(d.getId(),similarity);
         });
 

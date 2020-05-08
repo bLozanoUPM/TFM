@@ -21,8 +21,8 @@ sml <- function(lang,k){
   ggplot(data=df, aes(x=as.factor(cluster), y=tokens_i, fill=corpus_id)) +
     geom_boxplot()+
     scale_x_discrete(name="group_c")+
-    labs(title = "SML-Tokens distribution",
-         subtitle= concat("acquis_",lang))
+    # labs(title = "SML-Tokens distribution",
+    #      subtitle= concat("acquis_",lang))
   ggsave(concat(path,"box.png"))
   
   for (i in as.numeric(levels(as.factor(df$cluster)))) {
@@ -83,8 +83,8 @@ ck <- function(lang,k){
   ggplot(data=df, aes(x=as.factor(cluster), y=tokens_i, fill=corpus_id)) +
     geom_boxplot()+
     scale_x_discrete(name="group_c")+
-    labs(title = concat("CK",k,"-Tokens distribution"),
-         subtitle= concat("acquis_",lang))
+    # labs(title = concat("CK",k,"-Tokens distribution"),
+    #      subtitle= concat("acquis_",lang))
   ggsave(concat(path,"box.png"))
   
   for (i in as.numeric(levels(as.factor(df$cluster)))) {

@@ -1,12 +1,18 @@
 package metrics;
 
 import data.DocProjection;
+import org.json.JSONObject;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class JSD implements VectorMetrics{
 
+    public static AtomicInteger averageTime = new AtomicInteger();
+    
     Double threshold;
 
     public JSD(){
@@ -24,6 +30,7 @@ public class JSD implements VectorMetrics{
     public Double getThreshold(){
         return threshold;
     }
+
 
     public String name() {
         return "Jensen Shannon Divergence";
