@@ -3,7 +3,7 @@ import os
 initial_port = 8081
 
 lang = "es"
-split = "ck"
+split = "sml"
 k = 9
 
 f = open("docker-compose.topics.yml", "w")

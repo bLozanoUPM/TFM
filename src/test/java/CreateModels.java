@@ -42,19 +42,34 @@ public class CreateModels {
     }
 
     @Test
-    public void createModel() {
+    public void create_splitModel() {
         String lang = "es";
-        String model = "sml9";
+        String model = "ck9";
         String split = "1";
 
         int version = 1;
-        for(Integer n: new int[]{50/*,100,300,500*/}){
+        for(Integer n: new int[]{50,100,300,500}){
             String name = lang+"_"+model+"_"+split;
-            LibrairyClient.createModel(lang+"_"+model+"_"+split,
+            LibrairyClient.createModel(name,
                     lang.toUpperCase(),
                     (version++) +".0",
                     "/librairy/resources/"+lang+"/"+model+"/train/" + name + ".csv",
                     n);
+        }
+    }
+
+    @Test
+    public void create_acquisModel() {
+        int version = 1;
+        for(String lang: new String[]{"en","es"}){
+            for(Integer n: new int[]{50,100,300,500}){
+                String name = lang+"_acquis";
+                LibrairyClient.createModel(name,
+                        lang.toUpperCase(),
+                        (version++) +".0",
+                        "/librairy/resources/"+lang+"/train.csv",
+                        n);
+            }
         }
 
     }

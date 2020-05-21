@@ -71,5 +71,13 @@ public class Precision {
         return relevantAtK / totalAtK;
     }
 
+    double meanAveragePrecisionAtK(int k){
+        double mapK = 0;
+        for (int i = 1; i <= k; i++) {
+            mapK+=precisionAtK(i);
+        }
+        return mapK/k;
+    }
+
 
 }

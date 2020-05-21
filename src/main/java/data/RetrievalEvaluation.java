@@ -62,6 +62,10 @@ public class RetrievalEvaluation {
         return ap.meanAveragePrecision();
     }
 
+    private Double getMAPatK(int k) {
+        return ap.meanAveragePrecisionAtK(k);
+    }
+
     public Double getPK(int k){
         return ap.precisionAtK(k);
     }
@@ -163,8 +167,8 @@ public class RetrievalEvaluation {
                 getPK(5) +"," +
                 getPK(10) +"," +
                 getPK(15) +"," +
-                getMAP();
+                getMAP() +"," +
+                getMAPatK(10);
     }
-
 
 }

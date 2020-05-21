@@ -27,11 +27,11 @@ public class Evaluation {
             new JL()
     );
 
-    private static final String[] language = {/*"en",*/"es"};
+    private static final String[] language = {"en","es"};
 
-    private static final String[] splits = {"ck"/*,"sml"*/};
+    private static final String[] splits = {/*"ck",*/"sml"};
 
-    private static final int[] groups = {3/*,6,9*/};
+    private static final int[] groups = {3,6,9};
 
     private int[] ntopics = {50,100,300,500};
 
@@ -136,7 +136,7 @@ public class Evaluation {
         file.flush();
         BufferedWriter bw = new BufferedWriter(file);
 
-        bw.write("ptm_id,test_id,topics_i,metric_id,N_i,TP_i,FP_i,FN_i,precision_d,recall_d,fMeasure_d,P@1_d,P@3_d,P@5_d,P@10_d,P@15_d,MAP_d");
+        bw.write("ptm_id,test_id,topics_i,metric_id,N_i,TP_i,FP_i,FN_i,precision_d,recall_d,fMeasure_d,P@1_d,P@3_d,P@5_d,P@10_d,P@15_d,MAP_d,MAP@10_d");
         bw.newLine();
 
         evaluations.forEach((data,eval)->{

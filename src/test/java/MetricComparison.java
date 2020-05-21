@@ -22,7 +22,7 @@ public class MetricComparison {
 
     private static final Logger LOG = LoggerFactory.getLogger(MetricComparison.class);
 
-    private static final int N_MIN = 100;
+    private static final int N_MIN = 100000;
     private static final int N_MAX = 100000;
     private static final int[] K = {10,25,50,100,150,300};
     private static final int I = 1;
@@ -42,8 +42,8 @@ public class MetricComparison {
 
         for (int n = N_MIN; n <= N_MAX ; n*=10) {
 
-            for (int k: K){
-                Dirichlet distribution = new Dirichlet(k,0.1);
+            for (int k = 5; k < 300; k+=5){
+                Dirichlet distribution = new Dirichlet(k);
                 for (int i = 0; i < I; i++) {
                     LOG.info("\n\n\n{} documents -- {} K -- iteration {}",n,k,i);
 
@@ -156,5 +156,15 @@ public class MetricComparison {
         });
 
         bw.close();
+    }
+
+    public static void main(String[] args) {
+        Dirichlet distribution = new Dirichlet(4);
+
+        for (int i = 0; i < 10; i++) {
+            double[] sample = distribution.nextDistribution();
+            List<Double> vector = (DoubleStream.of(sample).boxed().collect(Collectors.toList()));
+            System.out.println(vector);
+        }
     }
 }

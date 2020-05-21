@@ -1,11 +1,10 @@
 concat <- function( ..., sep="" ) paste( ..., sep = sep )
 
 #Splits
-splits=c("sml3","sml6","sml9",
-         "ck3","ck6","ck9")
+splits=c("sml3","sml6","sml9")
 
 loadResults <- function(lang,split){
-  df=read.csv(concat("../src/main/resources/acquis/",lang,"/",split,"/evaluation/",split,"_evaluation.csv"), sep = ",")[,c(1:4,12:15)]
+  df=read.csv(concat("../src/main/resources/acquis/",lang,"/",split,"/evaluation/",split,"_evaluation.csv"), sep = ",")[,c(1:4,12:18)]
   df$test_id=as.factor(df$test_id)
   df$topics_i=as.factor(df$topics_i)
   return(df)

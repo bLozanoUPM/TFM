@@ -1,38 +1,38 @@
 version: '3'
 services:
-  es_ck9_1:
-    image: blozanoalvarez/es_ck9_1:1.0
+  es_sml9_1:
+    image: blozanoalvarez/es_sml9_1:4.0
     ports:
       - "8081:7777"
-  es_ck9_2:
-    image: blozanoalvarez/es_ck9_2:1.0
+  es_sml9_2:
+    image: blozanoalvarez/es_sml9_2:4.0
     ports:
       - "8082:7777"
-  es_ck9_3:
-    image: blozanoalvarez/es_ck9_3:1.0
+  es_sml9_3:
+    image: blozanoalvarez/es_sml9_3:4.0
     ports:
       - "8083:7777"
-  es_ck9_4:
-    image: blozanoalvarez/es_ck9_4:1.0
+  es_sml9_4:
+    image: blozanoalvarez/es_sml9_4:4.0
     ports:
       - "8084:7777"
-  es_ck9_5:
-    image: blozanoalvarez/es_ck9_5:1.0
+  es_sml9_5:
+    image: blozanoalvarez/es_sml9_5:4.0
     ports:
       - "8085:7777"
-  es_ck9_6:
-    image: blozanoalvarez/es_ck9_6:1.0
+  es_sml9_6:
+    image: blozanoalvarez/es_sml9_6:4.0
     ports:
       - "8086:7777"
-  es_ck9_7:
-    image: blozanoalvarez/es_ck9_7:1.0
+  es_sml9_7:
+    image: blozanoalvarez/es_sml9_7:4.0
     ports:
       - "8087:7777"
-  es_ck9_8:
-    image: blozanoalvarez/es_ck9_8:1.0
+  es_sml9_8:
+    image: blozanoalvarez/es_sml9_8:4.0
     ports:
       - "8088:7777"
-  es_ck9_9:
-    image: blozanoalvarez/es_ck9_9:1.0
+  es_sml9_9:
+    image: blozanoalvarez/es_sml9_9:4.0
     ports:
       - "8089:7777"

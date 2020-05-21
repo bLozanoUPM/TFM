@@ -19,13 +19,13 @@ public class ProjectDocuments {
     private static  String resources = "./src/main/resources/acquis/";
 
     // Change this with the eval name
-    private static final String model = "ck";
+    private static final String model = "sml";
 
     // Change this with the training subsets
     private static final int split = 9;
 
     // Change this with the number of topics
-    private static final int ntopics = 50;
+    private static final int ntopics = 500;
 
     // Change this with the language
     private static final String lang = "es";

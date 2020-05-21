@@ -14,85 +14,6 @@ public class CSVReader {
 
     private static Logger LOG = LoggerFactory.getLogger(CSVReader.class);
 
-//    /*
-//        Read all files containing models in $Models and return a corpus separated in the different testSets
-//        The expected format of the files is:
-//            filename:       {mode-name}_ptm.csv
-//            column names:   id;   ptm_id;   test_id;   labels_t;   topics_t;   vector_d
-//            separator:      ;
-//     */
-//    public static Map<String,List<Doc>> loadCorpora(String path, List<String> models){
-//        Map<String,Doc> corpus = new HashMap<>();
-//
-//        for(String model: models){
-//            try
-//            {
-//                File file = new File(path+model+"_ptm.csv");
-//                FileReader fileReader = new FileReader(file);
-//                BufferedReader csvReader = new BufferedReader(fileReader);
-//                String row = null;
-//                csvReader.readLine();     // column names
-//                while ( (row = csvReader.readLine()) != null )
-//                {
-//
-//                      /*    Remove whitespaces and divide line in:
-//                            id;    corpus_id;  labels_t;  topics_t;   vector_d  */
-//                    String[] document = row.replaceAll("\\s+","").split(";");
-//
-//                    String id = document[0]; // id
-//                    String q = document[1];  // corpus_id
-//
-//                    //labels
-//                    List<String> labels = Arrays.asList(document[2].replaceAll("[\\[\\]]","").split(","));
-//
-//                    // topics
-//                    String topics =  document[3];
-//                    String[] topicArray = topics.substring(1,topics.lastIndexOf("]")).split("[\\[\\]],");
-//                    List<List<String>> topicLevels = new ArrayList<>();
-//                    for (String topicLevel : topicArray) {
-//                        List<String> level = Arrays.asList(topicLevel.replaceAll("[\\[\\]]","").split(","));
-//                        topicLevels.add(level);
-//                    }
-//
-//                    //vector
-//                    double[] vectorArray = Arrays.stream(document[4].replaceAll("[\\[\\]]", "").split(","))
-//                            .mapToDouble(Double::parseDouble).toArray();
-//                    List<Double> vector = Arrays.stream(vectorArray).boxed().collect(Collectors.toList());
-//
-//                    if(!corpus.containsKey(id)){
-//                        Doc doc = new Doc(id,labels,q);
-//                        doc.addProjection(model,vector,topicLevels);
-//                        corpus.put(id,doc);
-//
-//                    }
-//                    else{
-//                        corpus.get(id).addProjection(model,vector,topicLevels);
-//                    }
-//                }
-//                csvReader.close();
-//            } catch (IOException e)
-//            {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        Map<String,List<Doc>> corpora = new HashMap<>();
-//
-//        //  Divide the corpus in the testIds
-//        corpus.values().forEach(doc -> {
-//            if(corpora.containsKey(doc.getCorpus_id())){
-//                corpora.get(doc.getCorpus_id()).add(doc);
-//            }
-//            else{
-//                List<Doc> testSet = new ArrayList<>();
-//                testSet.add(doc);
-//                corpora.put(doc.getCorpus_id(),testSet);
-//            }
-//        });
-//
-//        return corpora;
-//    }
-
     /*
         Update Corpus
             filename:       {mode-name}_ptm.csv
@@ -241,6 +162,29 @@ public class CSVReader {
             e.printStackTrace();
         }
         return corpus;
+    }
+
+    public static List<String> ids(String path){
+        List<String> ids = new ArrayList<>();
+        try {
+            File file = new File(path);
+            FileReader fileReader = new FileReader(file);
+
+            BufferedReader csvReader = new BufferedReader(fileReader);
+            String row = null;
+            csvReader.readLine();     // column names
+            while ( (row = csvReader.readLine()) != null )
+            {
+                String[] document = row.split(",");
+
+               ids.add(document[0]);
+            }
+            csvReader.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ids;
     }
 
 }

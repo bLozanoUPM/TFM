@@ -18,12 +18,12 @@ public class HoldOutSplit {
     private final static Logger LOG = LoggerFactory.getLogger(HoldOutSplit.class);
 
     private final double split = 0.05;
-    private final String lang = "es";
+    private final String lang = "en";
     private String resources = "./src/main/resources/";
 
 
     @Test
-    public void acquis() throws IOException {
+    public void acquis_Splits() throws IOException {
 
         Map<String,Doc> docs;
         docs = CSVReader.loadCorpus(resources+"corpora/acquis.csv")
@@ -131,11 +131,81 @@ public class HoldOutSplit {
 
     }
 
+    @Test
+    public void acquis() throws  IOException {
+        Map<String,Doc> docs;
+        docs = CSVReader.loadCorpus(resources+"corpora/acquis.csv")
+                .entrySet()
+                .stream()
+                .filter(d->d.getValue().getCorpus_id().endsWith(lang))
+                .collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue));
 
-    public static void main(String[] args) {
-        List<String> list = new ArrayList<String>(Arrays.asList(new String[]{"a", "b", "c"}));
-        System.out.println(list.size());
-        list=list.subList(0,1);
-        System.out.println(list.size());
+        List<String> jrc_ids = docs
+                .entrySet()
+                .stream()
+                .filter(d->d.getValue().getCorpus_id().startsWith("jrc"))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+
+
+        resources+="acquis/"+lang+"/";
+
+        List<String> train = CSVReader.ids("src/main/resources/corpora/acquis_"+lang+"_clean.csv");
+        List<String> test = jrc_ids.stream().filter(train::contains).collect(Collectors.toList());
+
+        int test_size = (int) Math.floor(docs.size() * split);
+
+        if(test_size<=jrc_ids.size()){
+            Collections.shuffle(jrc_ids);
+            test = jrc_ids.subList(0,test_size+1);
+        }
+
+        train.removeAll(test);
+        Collections.shuffle(train);
+
+        LOG.info("\nTrain:{}\nTest:{}\nTotal:{}",train.size(),test.size(),train.size()+test.size());
+
+        // Train/Test Files
+        try {
+
+            File testFile = new File(resources+"test.csv");
+            File trainFile = new File(resources+"train.csv");
+
+            FileWriter testFW = new FileWriter(testFile);
+            FileWriter trainFW = new FileWriter(trainFile);
+
+            BufferedWriter testBW = new BufferedWriter(testFW);
+            BufferedWriter trainBW = new BufferedWriter(trainFW);
+
+            testBW.write("id,root-labels_t,text_t\n");
+            trainBW.write("id,text_t\n");
+
+            test.forEach(q->{
+                try {
+                    testBW.write(q+",\""+docs.get(q).getLabels()+"\",\""
+                            +docs.get(q).getText().replaceAll(",","")+
+                            "\"\n");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
+            train.forEach(q->{
+                try {
+                    trainBW.write(q+",\""+docs.get(q).getText()+"\"\n");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
+
+            testBW.close();
+            trainBW.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
+
 }
